@@ -72,7 +72,7 @@ mysql -u root -p$db_root_pwd -ve"GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, D
 echo -e "\033[32mGreat!!! Matomo installation completed successfully."
 echo "Your system needs to be rebooted before you can continue to setup your system from GUI."
 echo "After restart you need to complete the setup from a web browser. Navigate to: https://your-server-name.com"
-echo -e "\033[31m=======Press Any Key to reboot the system!!!!!!!========"
+echo -e "\033[31m=======Press Any Key to reboot the system!!!!!!!========\033[0m"
 read -n1
 echo
 reboot
