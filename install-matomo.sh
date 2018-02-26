@@ -68,10 +68,11 @@ mysql -u root -p$db_root_pwd -ve"CREATE DATABASE $matomo_db;"
 mysql -u root -p$db_root_pwd -ve"CREATE USER '$matomo_user'@'localhost' IDENTIFIED BY '$matomo_usr_pwd';"
 mysql -u root -p$db_root_pwd -ve"GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, ALTER, CREATE TEMPORARY TABLES, LOCK TABLES ON $matomo_db.* TO '$matomo_user'@'localhost';"
 
-read -p "\033[32mGreat!!! Matomo installation completed successfully."
-read -p "Your system needs to be rebooted before you can continue to setup your system from GUI."
-read -p "After restart you need to complete the setup from a web browser. Navigate to: https://your-server-name.com"
-read -n1 -p "\033[32mPress Any Key to reboot the system."
+#reboot to make selinux changes effective
+echo -e "\033[32mGreat!!! Matomo installation completed successfully."
+echo "Your system needs to be rebooted before you can continue to setup your system from GUI."
+echo "After restart you need to complete the setup from a web browser. Navigate to: https://your-server-name.com"
+echo -e "\033[32mPress Any Key to reboot the system."
+read -n1 -p
 echo
 reboot
-
