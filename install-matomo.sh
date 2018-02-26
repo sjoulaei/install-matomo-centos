@@ -36,12 +36,10 @@ systemctl start mariadb
 mysql_secure_installation
 systemctl start httpd24-httpd
 
-mkdir /opt/matomo
-cd /opt/matomo
 wget https://builds.piwik.org/piwik.tar.gz
 tar -xvf piwik.tar.gz
 cp -r piwik /opt/rh/httpd24/root/var/www/matomo
-cp -v `pwd`/CONF/httpd/matomo.conf /opt/rh/httpd24/root/etc/httpd/conf.d/
+cp -v CONF/httpd/matomo.conf /opt/rh/httpd24/root/etc/httpd/conf.d/
 
 #Selinux config mode update to permissive
 
