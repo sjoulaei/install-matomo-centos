@@ -42,7 +42,7 @@ cd /opt/matomo
 wget https://builds.piwik.org/piwik.tar.gz
 tar -xvf piwik.tar.gz
 cp -r piwik /opt/rh/httpd24/root/var/www/html/matomo
-cp -v CONF/httpd/matomo.conf /opt/rh/httpd24/root/etc/httpd/conf.d/
+cp -v ./CONF/httpd/matomo.conf /opt/rh/httpd24/root/etc/httpd/conf.d/
 
 #Selinuc config mode update to permissive
 
