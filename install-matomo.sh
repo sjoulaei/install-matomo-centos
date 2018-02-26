@@ -42,14 +42,15 @@ cd /opt/matomo
 wget https://builds.piwik.org/piwik.tar.gz
 tar -xvf piwik.tar.gz
 cp -r piwik /opt/rh/httpd24/root/var/www/html/matomo
-cp -v ./CONF/httpd/matomo.conf /opt/rh/httpd24/root/etc/httpd/conf.d/
+cp -v CONF/httpd/matomo.conf /opt/rh/httpd24/root/etc/httpd/conf.d/
 
-#Selinuc config file whill be shown in next step
-echo "\033[32mFor apache to work properly with ssl, change the mode to permissive"
-read -n1 -p "Press any key to continue to SElinux config edit. When done, type :x to save and exit."
+#Selinuc config mode update to permissive
+
+echo -e "\033[32mFor apache to work properly with ssl, change the mode to permissive"
+echo -e "Press any key to update the config file or Ctrl-c to exit."
+read -n1 -p
 echo
-
-vi /etc/sysconfig/selinux
+sed -i 's/^SELINUX=.*/SELINUX=permissive/' /etc/sysconfig/selinux && echo SUCCESS || echo FAILURE
 
 chown -R apache:apache /opt/rh/httpd24/root/var/www/html/matomo
 chmod -R 0755 /opt/rh/httpd24/root/var/www/html/matomo/tmp
@@ -68,7 +69,6 @@ mysql -u root -p$db_root_pwd -ve"CREATE DATABASE $matomo_db;"
 mysql -u root -p$db_root_pwd -ve"CREATE USER '$matomo_user'@'localhost' IDENTIFIED BY '$matomo_usr_pwd';"
 mysql -u root -p$db_root_pwd -ve"GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, ALTER, CREATE TEMPORARY TABLES, LOCK TABLES ON $matomo_db.* TO '$matomo_user'@'localhost';"
 
-#reboot to make selinux changes effective
 echo -e "\033[32mGreat!!! Matomo installation completed successfully."
 echo "Your system needs to be rebooted before you can continue to setup your system from GUI."
 echo "After restart you need to complete the setup from a web browser. Navigate to: https://your-server-name.com"
@@ -76,3 +76,4 @@ echo -e "\033[32mPress Any Key to reboot the system."
 read -n1 -p
 echo
 reboot
+
