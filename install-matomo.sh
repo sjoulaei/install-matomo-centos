@@ -21,7 +21,6 @@ yum install -y httpd24-httpd httpd24-httpd httpd24-mod_ssl httpd24-mod_proxy_htm
 yum install -y mariadb-server mariadb
 
 #copy your ssl certificates
-mkdir -pv /opt/rh/httpd24/root/var/www/logs/
 echo -e "For SSL certificates to work properly you need to copy the certificate files. I assume you have them already somewhere accessible on the net."
 read -p "\033[32mEnter the source location for your ssl certificate key file (doc.diamondkey.com:/etc/ssl/certs/star_diamondkey_com.key):" ssl_key
 ssl_key=${ssl_key:-"doc.diamondkey.com:/etc/ssl/certs/star_diamondkey_com.key"}
@@ -41,10 +40,10 @@ mkdir /opt/matomo
 cd /opt/matomo
 wget https://builds.piwik.org/piwik.tar.gz
 tar -xvf piwik.tar.gz
-cp -r piwik /opt/rh/httpd24/root/var/www/html/matomo
-cp -v ./CONF/httpd/matomo.conf /opt/rh/httpd24/root/etc/httpd/conf.d/
+cp -r piwik /opt/rh/httpd24/root/var/www/matomo
+cp -v `pwd`/CONF/httpd/matomo.conf /opt/rh/httpd24/root/etc/httpd/conf.d/
 
-#Selinuc config mode update to permissive
+#Selinux config mode update to permissive
 
 echo -e "\033[32mFor apache to work properly with ssl, change the mode to permissive"
 echo -e "Press any key to update the config file or Ctrl-c to exit.\033[0m"
