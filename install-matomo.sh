@@ -47,8 +47,8 @@ cp -v CONF/httpd/matomo.conf /opt/rh/httpd24/root/etc/httpd/conf.d/
 #Selinuc config mode update to permissive
 
 echo -e "\033[32mFor apache to work properly with ssl, change the mode to permissive"
-echo -e "Press any key to update the config file or Ctrl-c to exit."
-read -n1 -p
+echo -e "Press any key to update the config file or Ctrl-c to exit.\033[0m"
+read -n1
 echo
 sed -i 's/^SELINUX=.*/SELINUX=permissive/' /etc/sysconfig/selinux && echo SUCCESS || echo FAILURE
 
@@ -72,8 +72,8 @@ mysql -u root -p$db_root_pwd -ve"GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, D
 echo -e "\033[32mGreat!!! Matomo installation completed successfully."
 echo "Your system needs to be rebooted before you can continue to setup your system from GUI."
 echo "After restart you need to complete the setup from a web browser. Navigate to: https://your-server-name.com"
-echo -e "\033[32mPress Any Key to reboot the system."
-read -n1 -p
+echo -e "\033[31m=======Press Any Key to reboot the system!!!!!!!========"
+read -n1
 echo
 reboot
 
