@@ -47,10 +47,8 @@ read -p "\033[32mEnter the source location for your ssl certificate key file (*.
 scp -v $ssl_crt /etc/pki/tls/certs/
 scp -v $ssl_key /etc/pki/tls/private/
 
-
-sed -i 's/^SSLCertificateFile.*/SSLCertificateFile /etc/pki/tls/certs/$ssl_crt' /opt/rh/httpd24/root/etc/httpd/conf.d/matomo.conf && echo SUCCESS || echo FAILURE
-sed -i 's/^SSLCertificateFile.*/SSLCertificateKeyFile /etc/pki/tls/private/$ssl_key' /opt/rh/httpd24/root/etc/httpd/conf.d/matomo.conf && echo SUCCESS || echo FAILURE
-
+sed -i "s|SSLCertificateFile.*|SSLCertificateFile /etc/pki/tls/certs/$ssl_crt|" /opt/rh/httpd24/root/etc/httpd/conf.d/matomo.conf  && echo SUCCESS || echo FAILURE
+sed -i "s|SSLCertificateKeyFile.*|SSLCertificateKeyFile /etc/pki/tls/private/$ssl_key|" /opt/rh/httpd24/root/etc/httpd/conf.d/matomo.conf  && echo SUCCESS || echo FAILURE
 
 echo "\033[32mWe are going to run the servers and services\033[0m"
 systemctl enable httpd24-httpd mariadb
