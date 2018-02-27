@@ -9,16 +9,14 @@
 #my prep
 echo -e "\033[32mInstall some of my favorite general packages\033[0m"
 yum update -y
-yum install -y vim wget
+yum install -y vim wget centos-release-scl
 
 #install required packages
 echo -e "\033[32mNow packages you need for Matomo\033[0m"
-yum install -y centos-release-scl
-yum install -y rh-php71-php rh-php71-php-mysqlnd
-yum install -y rh-php71-php-mbstring rh-php71-php-dom rh-php71-php-xml rh-php71-php-gd
-yum install -y sclo-php71-php-pecl-geoip rh-php71-php-devel
-yum install -y httpd24-httpd httpd24-httpd httpd24-mod_ssl httpd24-mod_proxy_html
-yum install -y mariadb-server mariadb
+yum install -y rh-php71-php rh-php71-php-mysqlnd rh-php71-php-mbstring\
+                rh-php71-php-dom rh-php71-php-xml rh-php71-php-gd sclo-php71-php-pecl-geoip rh-php71-php-devel\
+                httpd24-httpd httpd24-mod_ssl httpd24-mod_proxy_html\
+                mariadb-server mariadb
 
 #download and prepare matomo
 echo -e "\033[32mDonload and prepare latest version of Matomo package\033[0m"
@@ -40,13 +38,17 @@ sed -i 's/^SELINUX=.*/SELINUX=permissive/' /etc/sysconfig/selinux && echo SUCCES
 
 
 #copy your ssl certificates
-echo -e "For SSL certificates to work properly you need to copy the certificate files. I assume you have them already somewhere accessible on the net."
-read -p "\033[32mEnter the source location for your ssl certificate key file (doc.diamondkey.com:/etc/ssl/certs/star_diamondkey_com.key):" ssl_key
-ssl_key=${ssl_key:-"doc.diamondkey.com:/etc/ssl/certs/star_diamondkey_com.key"}
-read -p "Enter the source location for your ssl certificates (dena.diamondkey.com:/etc/ssl/certs/star_diamondkey_com.crt):" ssl_crt
-ssl_crt= ${ssl_crt:-"dena.diamondkey.com:/etc/ssl/certs/star_diamondkey_com.crt"}
-scp -v $ssl_key /etc/pki/tls/private/
-scp -v $ssl_crt /etc/pki/tls/certs/
+echo -e "For SSL certificates to work properly you need to copy the certificate files into the right location. I assume you have them in below addresses:"
+echo -e "certificate file: /etc/pki/tls/certs/your_cert_file.crt"
+echo -e "certificate key file: /etc/pki/tls/private/your_private_key_file.key"
+
+read -p "Enter the source location for your ssl certificates (localhost.crt):" ssl_crt
+ssl_crt=${ssl_crt:-"localhost.crt"}
+read -p "\033[32mEnter the source location for your ssl certificate key file (localhost.key):" ssl_key
+ssl_key=${ssl_key:-"localhost.key"}
+
+sed -i "s|SSLCertificateFile.*|SSLCertificateFile /etc/pki/tls/certs/$ssl_crt|" /opt/rh/httpd24/root/etc/httpd/conf.d/matomo.conf  && echo SUCCESS || echo FAILURE
+sed -i "s|SSLCertificateKeyFile.*|SSLCertificateKeyFile /etc/pki/tls/private/$ssl_key|" /opt/rh/httpd24/root/etc/httpd/conf.d/matomo.conf  && echo SUCCESS || echo FAILURE
 
 echo "\033[32mWe are going to run the servers and services\033[0m"
 systemctl enable httpd24-httpd mariadb
