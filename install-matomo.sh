@@ -41,12 +41,12 @@ sed -i 's/^SELINUX=.*/SELINUX=permissive/' /etc/sysconfig/selinux && echo SUCCES
 
 #copy your ssl certificates
 echo -e "For SSL certificates to work properly you need to copy the certificate files. I assume you have them already somewhere accessible on the net."
-read -p "\033[32mEnter the source location for your ssl certificate key file (doc.diamondkey.com:/etc/ssl/certs/star_diamondkey_com.key):" ssl_key
-ssl_key=${ssl_key:-"doc.diamondkey.com:/etc/ssl/certs/star_diamondkey_com.key"}
-read -p "Enter the source location for your ssl certificates (dena.diamondkey.com:/etc/ssl/certs/star_diamondkey_com.crt):" ssl_crt
-ssl_crt= ${ssl_crt:-"dena.diamondkey.com:/etc/ssl/certs/star_diamondkey_com.crt"}
-scp -v $ssl_key /etc/pki/tls/private/
+read -p "Enter the source location for your ssl certificates (*.crt):" ssl_crt
+read -p "\033[32mEnter the source location for your ssl certificate key file (*.key):" ssl_key
+
 scp -v $ssl_crt /etc/pki/tls/certs/
+scp -v $ssl_key /etc/pki/tls/private/
+
 
 sed -i 's/^SSLCertificateFile.*/SSLCertificateFile /etc/pki/tls/certs/$ssl_crt' /opt/rh/httpd24/root/etc/httpd/conf.d/matomo.conf && echo SUCCESS || echo FAILURE
 sed -i 's/^SSLCertificateFile.*/SSLCertificateKeyFile /etc/pki/tls/private/$ssl_key' /opt/rh/httpd24/root/etc/httpd/conf.d/matomo.conf && echo SUCCESS || echo FAILURE
