@@ -34,7 +34,7 @@ echo -e "\033[32mFor apache to work properly with ssl, change the mode to permis
 echo -e "Press any key to update the config file or Ctrl-c to exit.\033[0m"
 read -n1
 echo
-sed -i 's/^SELINUX=.*/SELINUX=permissive/' /etc/sysconfig/selinux && echo SUCCESS || echo FAILURE
+sed -i 's/^SELINUX=.*/SELINUX=permissive/' /etc/selinux/config && echo SUCCESS || echo FAILURE
 
 
 #copy your ssl certificates
