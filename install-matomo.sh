@@ -20,26 +20,15 @@ yum install -y sclo-php71-php-pecl-geoip rh-php71-php-devel
 yum install -y httpd24-httpd httpd24-httpd httpd24-mod_ssl httpd24-mod_proxy_html
 yum install -y mariadb-server mariadb
 
-#copy your ssl certificates
-echo -e "For SSL certificates to work properly you need to copy the certificate files. I assume you have them already somewhere accessible on the net."
-read -p "\033[32mEnter the source location for your ssl certificate key file (doc.diamondkey.com:/etc/ssl/certs/star_diamondkey_com.key):" ssl_key
-ssl_key=${ssl_key:-"doc.diamondkey.com:/etc/ssl/certs/star_diamondkey_com.key"}
-read -p "Enter the source location for your ssl certificates (doc.diamondkey.com:/etc/ssl/certs/star_diamondkey_com.crt):" ssl_crt
-ssl_crt= ${ssl_crt:-"doc.diamondkey.com:/etc/ssl/certs/star_diamondkey_com.crt"}
-scp -v $ssl_key /etc/ssl/certs/
-scp -v $ssl_crt /etc/ssl/certs/
-
-
-echo "\033[32mWe are going to run the servers and services\033[0m"
-systemctl enable httpd24-httpd mariadb
-systemctl start mariadb
-mysql_secure_installation
-systemctl start httpd24-httpd
-
+#download and prepare matomo
+echo -e "\033[32mDonload and prepare latest version of Matomo package\033[0m"
 wget https://builds.piwik.org/piwik.tar.gz
 tar -xvf piwik.tar.gz
+mkdir -p piwik/tmp/{assets,cache,logs,tcpdf,templates_c}
 cp -r piwik /opt/rh/httpd24/root/var/www/matomo
 cp -v CONF/httpd/matomo.conf /opt/rh/httpd24/root/etc/httpd/conf.d/
+chown -R apache:apache /opt/rh/httpd24/root/var/www/matomo
+chmod -R 0755 /opt/rh/httpd24/root/var/www/matomo/tmp
 
 #Selinux config mode update to permissive
 
@@ -49,11 +38,26 @@ read -n1
 echo
 sed -i 's/^SELINUX=.*/SELINUX=permissive/' /etc/sysconfig/selinux && echo SUCCESS || echo FAILURE
 
-chown -R apache:apache /opt/rh/httpd24/root/var/www/html/matomo
-chmod -R 0755 /opt/rh/httpd24/root/var/www/html/matomo/tmp
 
+#copy your ssl certificates
+echo -e "For SSL certificates to work properly you need to copy the certificate files. I assume you have them already somewhere accessible on the net."
+read -p "\033[32mEnter the source location for your ssl certificate key file (doc.diamondkey.com:/etc/ssl/certs/star_diamondkey_com.key):" ssl_key
+ssl_key=${ssl_key:-"doc.diamondkey.com:/etc/ssl/certs/star_diamondkey_com.key"}
+read -p "Enter the source location for your ssl certificates (dena.diamondkey.com:/etc/ssl/certs/star_diamondkey_com.crt):" ssl_crt
+ssl_crt= ${ssl_crt:-"dena.diamondkey.com:/etc/ssl/certs/star_diamondkey_com.crt"}
+scp -v $ssl_key /etc/pki/tls/private/
+scp -v $ssl_crt /etc/pki/tls/certs/
+
+
+echo "\033[32mWe are going to run the servers and services\033[0m"
+systemctl enable httpd24-httpd mariadb
+systemctl start httpd24-httpd
+systemctl start mariadb
+mysql_secure_installation
+
+
+#prepare database: create database, user and grant permissions to the user
 echo "now time to prepare the database. Keep record of your answers to next step questions. You will need them later when starting your server on GUI"
-
 read -sp "What is your MariaDB root password: " db_root_pwd
 echo
 read -p "Enter the Matomo user name you want to create: (matomo_user) " matomo_user
