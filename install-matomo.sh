@@ -47,6 +47,8 @@ read -p "Enter the source location for your ssl certificates (dena.diamondkey.co
 ssl_crt= ${ssl_crt:-"dena.diamondkey.com:/etc/ssl/certs/star_diamondkey_com.crt"}
 scp -v $ssl_key /etc/pki/tls/private/
 scp -v $ssl_crt /etc/pki/tls/certs/
+sed -i 's/^SSLCertificateFile.*/SSLCertificateFile /etc/pki/tls/certs/$ssl_crt' /opt/rh/httpd24/root/etc/httpd/conf.d/matomo.conf && echo SUCCESS || echo FAILURE
+sed -i 's/^SSLCertificateFile.*/SSLCertificateKeyFile /etc/pki/tls/private/$ssl_key' /opt/rh/httpd24/root/etc/httpd/conf.d/matomo.conf && echo SUCCESS || echo FAILURE
 
 
 echo "\033[32mWe are going to run the servers and services\033[0m"
