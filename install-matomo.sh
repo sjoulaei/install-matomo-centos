@@ -13,10 +13,9 @@ yum install -y vim wget centos-release-scl
 
 #install required packages
 echo -e "\033[32mNow packages you need for Matomo\033[0m"
-yum install -y rh-php71-php rh-php71-php-mysqlnd
-                rh-php71-php-mbstring rh-php71-php-dom rh-php71-php-xml rh-php71-php-gd
-                sclo-php71-php-pecl-geoip rh-php71-php-devel
-                httpd24-httpd httpd24-httpd httpd24-mod_ssl httpd24-mod_proxy_html
+yum install -y rh-php71-php rh-php71-php-mysqlnd rh-php71-php-mbstring\
+                rh-php71-php-dom rh-php71-php-xml rh-php71-php-gd sclo-php71-php-pecl-geoip rh-php71-php-devel\
+                httpd24-httpd httpd24-mod_ssl httpd24-mod_proxy_html\
                 mariadb-server mariadb
 
 #download and prepare matomo
